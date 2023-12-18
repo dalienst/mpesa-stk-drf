@@ -76,24 +76,6 @@ class MpesaCallbackView(APIView):
 
         if callback_data:
             MpesaBody.objects.create(body=callback_data)
-
-            # Extract data from callback_data to create a Checkout instance
-            amount = callback_data["Body"]["stkCallback"]["CallbackMetadata"]["Item"][
-                0
-            ]["Value"]
-            phone_number = callback_data["Body"]["stkCallback"]["CallbackMetadata"][
-                "Item"
-            ][3]["Value"]
-            receipt = callback_data["Body"]["stkCallback"]["CallbackMetadata"]["Item"][
-                1
-            ]["Value"]
-
-            Checkout.objects.create(
-                amount=amount,
-                phone=phone_number,
-                receipt=receipt,
-            )
-
             return Response({"message": "Callback Data received successfully"})
         return Response(
             {"Failed": "No Callback Data Received"}, status=status.HTTP_400_BAD_REQUEST
